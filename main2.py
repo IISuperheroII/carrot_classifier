@@ -34,17 +34,16 @@ val_data = val_datagen.flow_from_directory(
 )
 
 # Modell definieren mit funktionalem API für Grad-CAM-Kompatibilität
-inputs = Input(shape=(150, 150, 3))
-x = Conv2D(32, (3, 3), activation='relu')(inputs)
-x = MaxPooling2D(2, 2)(x)
-x = Conv2D(64, (3, 3), activation='relu')(x)
-x = MaxPooling2D(2, 2)(x)
-x = Flatten()(x)
-x = Dense(64, activation='relu')(x)
-x = Dropout(0.5)(x)
-outputs = Dense(1, activation='sigmoid')(x)
-
-model = Model(inputs=inputs, outputs=outputs)
+model = Sequential([
+    Conv2D(32, (3, 3), activation='relu', input_shape=(150, 150, 3)),
+    MaxPooling2D(2, 2),
+    Conv2D(64, (3, 3), activation='relu'),
+    MaxPooling2D(2, 2),
+    Flatten(),
+    Dense(64, activation='relu'),
+    Dropout(0.5),
+    Dense(1, activation='sigmoid')
+])
 
 model.compile(optimizer=Adam(learning_rate=0.0001), loss='binary_crossentropy', metrics=['accuracy'])
 
